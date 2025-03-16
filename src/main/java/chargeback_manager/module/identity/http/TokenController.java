@@ -10,14 +10,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 
 @RestController
+@RequestMapping("/v1")
 public class TokenController {
 
     @Autowired
@@ -25,33 +24,35 @@ public class TokenController {
     private final UserRepositoryPort repository;
     private BCryptPasswordEncoder bcrypt;
 
-
-    public TokenController(JwtEncoder jwtEncoder, UserRepositoryPort repository) {
+    public TokenController(JwtEncoder jwtEncoder, UserRepositoryPort repository, BCryptPasswordEncoder bcrypt) {
         this.jwtEncoder = jwtEncoder;
         this.repository = repository;
+        this.bcrypt = bcrypt;
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/signing")
     @ResponseStatus(HttpStatus.OK)
     public SigninResponse signin(@RequestBody @Valid SigninRequest signinRequest) {
-        var user = repository.findByEmail(signinRequest.email());
+        System.out.println("chegou aqui?");
 
+        var user = repository.findByEmail(signinRequest.email());
         if(user.isEmpty() || !user.get().isLoginCorrect(signinRequest, bcrypt)) {
             throw new BadCredentialsException("user or password is invalid");
         }
 
         var now = Instant.now();
         var expiresIn = 600L;
+        var userId = user.get().getId();
 
         var claims = JwtClaimsSet.builder()
-                .issuer("mybackend")
-                .subject(user.get().getId())
+                .id(userId)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
                 .build();
 
-        var jwtValue = "";
-        return new SigninResponse(jwtValue, expiresIn);
+        System.out.println("Claims ID: " + (claims.getId() != null ? claims.getId() : "ID não definido"));
+        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims));
+        return new SigninResponse(jwtValue.getTokenValue().toString(), expiresIn);
     }
 
 }

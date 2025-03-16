@@ -4,9 +4,11 @@ import chargeback_manager.module.identity.persistence.repository.UserRepositoryM
 import chargeback_manager.module.identity.persistence.entity.UserSchema;
 import chargeback_manager.module.identity.persistence.port.UserRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Autowired

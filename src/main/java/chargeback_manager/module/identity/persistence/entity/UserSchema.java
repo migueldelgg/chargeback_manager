@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -30,10 +31,17 @@ public class UserSchema {
     private List<Role> roles;
 
     @CreatedDate
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
+
+    public UserSchema(String email, String name, String password, List<Role> roles) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.roles = roles;
+    }
 
     public boolean isLoginCorrect
             (@Valid SigninRequest signinRequest, PasswordEncoder passwordEncoder) {
@@ -42,5 +50,22 @@ public class UserSchema {
 
     public String getId() {
         return id;
+    }
+
+    public @Email String getEmail() {
+        return email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSchema{" +
+                "createdAt=" + createdAt +
+                ", id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
