@@ -5,7 +5,6 @@ import chargeback_manager.module.identity.persistence.entity.Role;
 import chargeback_manager.module.identity.persistence.entity.UserSchema;
 import chargeback_manager.module.identity.persistence.port.UserRepositoryPort;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
