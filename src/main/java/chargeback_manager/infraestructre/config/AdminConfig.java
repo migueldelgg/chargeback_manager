@@ -1,9 +1,8 @@
-package chargeback_manager.module.identity.core;
+package chargeback_manager.infraestructre.config;
 
 import chargeback_manager.module.identity.persistence.entity.Role;
 import chargeback_manager.module.identity.persistence.entity.UserSchema;
 import chargeback_manager.module.identity.persistence.port.UserRepositoryPort;
-import chargeback_manager.module.identity.persistence.repository.UserRepositoryMongo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

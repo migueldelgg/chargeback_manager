@@ -1,6 +1,6 @@
 package chargeback_manager.module.identity.persistence.entity;
 
-import chargeback_manager.module.identity.http.dto.SigninRequest;
+import chargeback_manager.module.identity.http.dto.signIn.SignInRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Document(collection = "users")
@@ -44,7 +43,7 @@ public class UserSchema {
     }
 
     public boolean isLoginCorrect
-            (@Valid SigninRequest signinRequest, PasswordEncoder passwordEncoder) {
+            (@Valid SignInRequest signinRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(signinRequest.password(), this.password);
     }
 
@@ -54,6 +53,10 @@ public class UserSchema {
 
     public @Email String getEmail() {
         return email;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
     @Override
